@@ -24,7 +24,21 @@ Neste laboratório, realizei as seguintes tarefas:
 ### 1. Lançamento da Instância
 A instância foi configurada com a AMI **Amazon Linux 2023** e tipo **t3.micro**. Foi ativada a **Proteção contra Encerramento** para evitar exclusões acidentais.
 
-> **Momento para Print 1:** Tela de resumo das configurações da instância antes de clicar em "Launch" (Executar).
+* **Definição de um nome para o servidor**
+
+<img src="name-ec2.PNG" width="800">
+
+* **Escolha da AMI: Amazon Linux 2023**
+<img src="ami-ec2.PNG" width="800">
+
+* **Escolha do Tipo de Instância: t3.micro**
+<img src="instancia-ec2.PNG" width="800">
+
+* **Ativação da proteção contra encerramento**
+<img src="protecao-encerramento-ec2.PNG" width="800">
+
+* **Resumo das configurações da instância**
+<img src="resumo-ec2.PNG" width="500">
 
 ### 2. Automação com User Data
 Utilizei o script abaixo para que a instância já subisse como um servidor web funcional:
@@ -68,7 +82,21 @@ chmod 644 /var/www/html/index.html
 ### 3. Ajuste de Segurança (Firewall)
 Inicialmente, o servidor não estava acessível. Foi necessário editar as **Inbound Rules** do Security Group para permitir tráfego na porta **80 (HTTP)** vindo de qualquer lugar (0.0.0.0/0).
 
-> **Momento para Print 2:** A regra de entrada (Inbound Rule) configurada no Security Group e, em seguida, a página "Hello From Your Web Server!" aberta no navegador.
+* **Painel de regras antes da alteração:**
+<img src="security-group-semregras.PNG" width="800">
+
+* **Servidor Web com erro:**
+<img src="server-web-erro.PNG" width="800">
+
+---
+
+* **Adicionando regra para permitir o tráfego na porta  80 (HTTP):**
+<img src="regras-security-group.PNG" width="800">
+
+* **Servidor Web com acesso:**
+<img src="server-web-ok.PNG" width="800">
+
+
 
 ### 4. Redimensionamento e Armazenamento
 Para simular uma necessidade de maior performance:
@@ -76,18 +104,24 @@ Para simular uma necessidade de maior performance:
 2. O tipo de instância foi alterado de **t3.micro** para **t3.small**.
 3. O volume EBS foi expandido de **8 GiB** para **10 GiB**.
 
-> **Momento para Print 3:** Tela de "Modify Volume" ou a tabela de instâncias mostrando o novo tipo (t3.small).
+<img src="alterado-tipo-instancia.PNG" width="800" >
+
+---
+
+<img src="alterado-volume-ebs.PNG" width="800">
 
 ### 5. Proteção contra Encerramento (Termination Protection)
 
 Uma configuração vital aplicada neste laboratório foi a **Proteção contra Encerramento**. Esta funcionalidade adiciona uma camada extra de segurança, impedindo que a instância seja terminada (excluída) acidentalmente através do console, CLI ou API.
 
 ### Como funciona:
-* **Configuração Inicial:** A proteção foi ativada durante o passo de "Detalhes Avançados" na criação da instância.
 * **Mecanismo de Defesa:** Se um utilizador tentar encerrar a instância com a proteção ativa, a AWS bloqueia a ação e exibe uma mensagem de erro.
+
+<img src="erro-encerramento.PNG" width="1500" >
+
 * **Procedimento de Exclusão:** Para remover a instância, é necessário primeiro desativar manualmente a proteção nas configurações da instância e só depois proceder ao encerramento.
 
-> **Momento para Print 4:** Print da mensagem de erro vermelha da AWS ao tentar encerrar a instância: *"Failed to terminate an instance: The instance may not be terminated. Modify its 'termination protection' instance attribute and try again."* 
+<img src="alteracao-encerramento.PNG" width="800" >
 
 ---
 
