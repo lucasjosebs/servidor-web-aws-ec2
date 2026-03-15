@@ -248,5 +248,7 @@ resource "aws_instance" "web_server" {
 Instância funcionando
 <img src="img/instancia-terraform-run.png" width="800" >
 
-## 🧹 Limpeza de Recursos
-Ao final, a proteção contra encerramento foi desativada para permitir a exclusão da instância e evitar custos desnecessários.
+5. Limpeza de Recursos ao final, a proteção contra encerramento foi desativada para permitir a exclusão da instância e evitar custos desnecessários.
+    ```bash
+    terraform destroy
+    ```
