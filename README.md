@@ -154,68 +154,66 @@ Uma configuração vital aplicada neste laboratório foi a **Proteção contra E
 Para tornar a infraestrutura escalável e evitar erros manuais, o processo foi automatizado utilizando **Terraform**.
 Os arquivos de configuração estão localizados na pasta [/terraform](./terraform). Esta abordagem permite que todo o ambiente seja destruído e recriado em minutos com precisão total.
 
-📄 Código Principal (/main.tf).
-Abaixo está o bloco central da automação, que define desde o provedor AWS até o script de inicialização do servidor:
 
 #### 📄 Infraestrutura como Código (`main.tf`)
 Abaixo está o código principal utilizado para automatizar o provisionamento. Ele define a instância, as regras de firewall e o script de inicialização do servidor:
 
 ```hcl
-    resource "aws_instance" "web_server" {
-    ami           = "ami-0c7217cdde317cfec" # Amazon Linux 2023
-    instance_type = "t3.micro"               
-    
-    # Ativa a proteção contra encerramento 
-    disable_api_termination = true
+resource "aws_instance" "web_server" {
+  ami           = "ami-0c7217cdde317cfec" # Amazon Linux 2023
+  instance_type = "t3.micro"               
+  
+  # Ativa a proteção contra encerramento 
+  disable_api_termination = true
 
-    vpc_security_group_ids = [aws_security_group.web_server_sg.id]
+  vpc_security_group_ids = [aws_security_group.web_server_sg.id]
 
-    # Script de User Data para automação do servidor
-    user_data = <<-EOF
-                #!/bin/bash
-                yum install -y httpd
-                systemctl enable httpd
-                systemctl start httpd
-                
-                cat <<INNEREOF > /var/www/html/index.html
-                <!DOCTYPE html>
-                <html lang="pt-br">
-                <head>
-                    <meta charset="UTF-8">
-                    <title>Servidor Ativo</title>
-                    <style>
-                        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f0f2f5; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-                        .card { background: white; padding: 3rem; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); text-align: center; max-width: 400px; }
-                        h1 { color: #1e272e; margin-bottom: 10px; }
-                        p { color: #485460; line-height: 1.6; }
-                        .status-container { margin-top: 20px; padding: 10px; background: #e8f8f5; border-radius: 8px; }
-                        .status { color: #05c46b; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; }
-                    </style>
-                </head>
-                <body>
-                    <div class="card">
-                        <h1>🚀 Instância Online</h1>
-                        <p>O servidor web foi provisionado com sucesso via <b>User Data</b>.</p>
-                        <div class="status-container">
-                            <span class="status">● Status: Operacional</span>
-                        </div>
-                    </div>
-                </body>
-                </html>
-                INNEREOF
-                chmod 644 /var/www/html/index.html
-                EOF
+  # Script de User Data para automação do servidor
+  user_data = <<-EOF
+              #!/bin/bash
+              yum install -y httpd
+              systemctl enable httpd
+              systemctl start httpd
+              
+              cat <<INNEREOF > /var/www/html/index.html
+              <!DOCTYPE html>
+              <html lang="pt-br">
+              <head>
+                  <meta charset="UTF-8">
+                  <title>Servidor Ativo</title>
+                  <style>
+                      body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f0f2f5; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+                      .card { background: white; padding: 3rem; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); text-align: center; max-width: 400px; }
+                      h1 { color: #1e272e; margin-bottom: 10px; }
+                      p { color: #485460; line-height: 1.6; }
+                      .status-container { margin-top: 20px; padding: 10px; background: #e8f8f5; border-radius: 8px; }
+                      .status { color: #05c46b; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; }
+                  </style>
+              </head>
+              <body>
+                  <div class="card">
+                      <h1>🚀 Instância Online</h1>
+                      <p>O servidor web foi provisionado com sucesso via <b>User Data</b>.</p>
+                      <div class="status-container">
+                          <span class="status">● Status: Operacional</span>
+                      </div>
+                  </div>
+              </body>
+              </html>
+              INNEREOF
+              chmod 644 /var/www/html/index.html
+              EOF
 
-    # Armazenamento EBS
-    root_block_device {
-        volume_size = 8
-        volume_type = "gp3"
-    }
+  # Armazenamento EBS
+  root_block_device {
+    volume_size = 8
+    volume_type = "gp3"
+  }
 
-    tags = {
-        Name = "Web Server"
-    }
-    }
+  tags = {
+    Name = "Web Server"
+  }
+}
 ```
 
 #### Diferenciais da Automação:
@@ -233,22 +231,22 @@ Abaixo está o código principal utilizado para automatizar o provisionamento. E
     ```bash
     terraform init
     ```
-<img src="img/terraform-init.PNG" width="800" >
+<img src="img/terraform-init.png" width="800" >
 
 3. Planejar | Mostrar as configurações antes de aplicar:
     ```bash
     terraform plan
     ```
-<img src="img/terraform-plan.PNG" width="800" >
+<img src="img/terraform-plan.png" width="800" >
 
 4. Aplique a infraestrutura:
     ```bash
     terraform apply
     ```
-<img src="img/apply-complete.PNG" width="800" >
+<img src="img/apply-complete.png" width="800" >
 
 Instância funcionando
-<img src="img/instancia-terraform-run.PNG" width="800" >
+<img src="img/instancia-terraform-run.png" width="800" >
 
 ## 🧹 Limpeza de Recursos
 Ao final, a proteção contra encerramento foi desativada para permitir a exclusão da instância e evitar custos desnecessários.
